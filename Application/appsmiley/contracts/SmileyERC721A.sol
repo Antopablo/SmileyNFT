@@ -24,9 +24,9 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     Step public sellingStep;
 
     uint256 private constant MAX_SUPPLY = 30;
-    uint256 private constant MAX_GIFT = 5;
+    uint256 private constant MAX_GIFT = 3;
     uint256 private constant MAX_WHITELIST = 5;
-    uint256 private constant MAX_PUBLIC = 20;
+    uint256 private constant MAX_PUBLIC = 22;
     uint256 private constant MAX_SUPPLY_MINUS_GIFT = MAX_SUPPLY - MAX_GIFT;
 
     uint256 public wlSalePrice = 0.01 ether;
@@ -62,6 +62,64 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
         merkleRoot = _merkleRoot;
         baseURI = _baseURI;
         teamLength = _team.length;
+    }
+
+    /**
+     * @notice This contract can't ve called by other contracts
+     */
+    modifier callerIsUser() {
+        require(tx.origin == msg.sender, "The caller is another contract");
+        _;
+    }
+
+    function whitelistMint(
+        address _account,
+        uint256 _quantity,
+        bytes32[] calldata _proof
+    ) external payable callerIsUser {
+        require(!isPaused, "Contract is paused");
+        require(currentTime() >= saleStartTime, "Sale has not started yet");
+        require(currentTime() < saleStartTime + 12 hours, "Sale is finished");
+
+        uint256 price = wlSalePrice;
+        require(price != 0, "Price is 0");
+        require(
+            sellingStep == Step.WhitelistSale,
+            "Whitelist sale is not activated"
+        );
+        require(isWhiteListed(msg.sender, _proof), "Not whitelisted");
+        require(
+            amountNFTperWalletWhiteListSale[msg.sender] + _quantity <=
+                MAX_PER_ADRESS_DURING_WHITELIST_MINT,
+            "You can only get 1 NFT on whitelist"
+        );
+        require(
+            totalSupply() + _quantity <= MAX_WHITELIST,
+            "Max supply exceeded"
+        );
+        require(msg.value >= price * _quantity, "Not enought founds");
+        amountNFTperWalletWhiteListSale[msg.sender] += _quantity;
+
+        _safeMint(_account, _quantity);
+    }
+
+    /**
+     * @notice Get the token URI of an NFT by his ID
+     *
+     * @param _tokenId The ID Token
+     *
+     * @return TokenURI The URI
+     */
+    function tokenURI(uint256 _tokenId)
+        public
+        view
+        virtual
+        override(ERC721A, IERC721A)
+        returns (string memory)
+    {
+        require(_exists(_tokenId), "URI query for nonexistant token.");
+
+        return string(abi.encodePacked(baseURI, _tokenId.toString(), ".json"));
     }
 
     /**
@@ -178,5 +236,20 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
         returns (bool)
     {
         return _verify(leaf(_account), _proof);
+    }
+
+    /**
+     * @notice Release the gains on every account team
+     *
+     */
+    function releaseAll() external {
+        for (uint8 i = 0; i < teamLength; i++) {
+            release(payable(payee(i)));
+        }
+    }
+
+    // not allowing receiving ethers outside minting function
+    receive() external payable override {
+        revert("Only if you mint");
     }
 }
