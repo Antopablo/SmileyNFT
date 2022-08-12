@@ -136,4 +136,47 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     function setMerkleRoot(bytes32 _merkleRoot) external onlyOwner {
         merkleRoot = _merkleRoot;
     }
+
+    /**
+     * @notice Hash an address
+     *
+     * @param _account address to be hashed
+     *
+     * @return bytes32 The hashed address
+     */
+    function leaf(address _account) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_account));
+    }
+
+    /**
+     * @notice Returns true if a leaf can be proved to be a part of a merkle tree definied by root
+     *
+     * @param _leaf the leaf
+     * @param _proof the merkle proof
+     *
+     * @return bool if a leaf can be proved to be a part of a merkle tree definied by root
+     */
+    function _verify(bytes32 _leaf, bytes32[] memory _proof)
+        internal
+        view
+        returns (bool)
+    {
+        return MerkleProof.verify(_proof, merkleRoot, _leaf);
+    }
+
+    /**
+     * @notice Check if an address is whitelisted or not
+     *
+     * @param _account The account to check
+     * @param _proof the merkle proof
+     *
+     * @return bool true if whitelisted
+     */
+    function isWhiteListed(address _account, bytes32[] calldata _proof)
+        internal
+        view
+        returns (bool)
+    {
+        return _verify(leaf(_account), _proof);
+    }
 }
