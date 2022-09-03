@@ -1,10 +1,8 @@
-const hre = require("hardhat");
-const { MerkleTree } = require('merkletreejs');
+const { MerkleTree } = require("merkletreejs");
 const keccak256 = require("keccak256");
-const tokens = require('../tokens.json');
+const tokens = require("./tokens.json");
 
 async function main() {
-
   let tab = [];
   tokens.map((token) => {
     tab.push(token.address);
@@ -12,15 +10,10 @@ async function main() {
   const leaves = tab.map((address) => keccak256(address));
   const tree = new MerkleTree(leaves, keccak256, { sort: true });
   const root = tree.getHexRoot();
-  const baseURI = "ipfs://QmW7XqjS1AaNTmhqvhqJLfe1fyiGNXMVPgUdw7aYTncwmd/"
-
-  const Contract = await hre.ethers.getContractFactory("SmileyERC721A");
-  const contract = await Contract.deploy(root, baseURI);
-
-  await contract.deployed();
-
-  console.log("Deployed to : " + contract.address, " - root: " + root + " - baseURI: " + baseURI);
-
+  const leaf = keccak256("0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db");
+  const proof = tree.getHexProof(leaf);
+  console.log("root : " + root);
+  console.log("proof : [\"" + proof + "\"]");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -29,5 +22,5 @@ main()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
-    process.exitCode = 1;
+    process.exit(1);
   });
