@@ -72,6 +72,14 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
         _;
     }
 
+    /**
+     * @notice Mint function for the whitelist sales
+     *
+     * @param _account Account which will receive the NFT
+     * @param _quantity Number of NFT the user wants to mine
+     * @param _proof MerckleProof
+     *
+     */
     function whitelistMint(
         address _account,
         uint256 _quantity,
@@ -101,6 +109,58 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
         amountNFTperWalletWhiteListSale[msg.sender] += _quantity;
 
         _safeMint(_account, _quantity);
+    }
+
+    /**
+     * @notice Mint function for the public mint
+     *
+     * @param _account Account which will receive the NFT
+     * @param _quantity  Number of NFT the user wants to mine
+     *
+     */
+    function publicMint(address _account, uint256 _quantity)
+        external
+        payable
+        callerIsUser
+    {
+        require(!isPaused, "Contract is paused");
+        require(
+            currentTime() > saleStartTime + 24 hours,
+            "Public sales has not started yet"
+        );
+        require(
+            currentTime() < saleStartTime + 48 hours,
+            "Public sales is finish"
+        );
+
+        uint256 price = publicSalePrice;
+        require(price > 0, "Price is 0");
+        require(sellingStep == Step.PublicSale, "Public sale is not activated");
+        require(
+            amountNFTperWalletPublicSale[msg.sender] + _quantity <=
+                MAX_PER_ADRESS_DURING_PUBLIC_MINT,
+            "You can only get 3 NFTs on the whitelist sale"
+        );
+        require(
+            totalSupply() + _quantity <= MAX_SUPPLY_MINUS_GIFT,
+            "Max supply exceeded"
+        );
+        require(msg.value >= price * _quantity, "Not enought funds");
+        amountNFTperWalletPublicSale[msg.sender] += _quantity;
+        _safeMint(_account, _quantity);
+    }
+
+    /**
+     * @notice Allow the owner to gift NFTs
+     *
+     * @param _to The address of the receiver
+     * @param _quantity Amount of NFTs to owner wants to gift
+     *
+     */
+    function gift(address _to, uint256 _quantity) external onlyOwner {
+        require(sellingStep > Step.PublicSale, "Gift is after the public sale");
+        require(totalSupply() + _quantity <= MAX_SUPPLY, "Reach max supply");
+        _safeMint(_to, _quantity);
     }
 
     /**
