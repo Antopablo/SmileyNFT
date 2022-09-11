@@ -96,6 +96,35 @@ export default function Home() {
                 return (
                   <Before />
                 )
+              case 1:
+                return (
+                  <WhitelistSale
+                    BNWlSalePrice={BNWlSalePrice}
+                    wlSalePrice={wlSalePrice}
+                    totalSupply={totalSupply}
+                    getDatas={getDatas} />
+                )
+              case 2:
+                return (
+                  <PublicSale
+                    BNPublicSalePrice={BNPublicSalePrice}
+                    publicSalePrice={publicSalePrice}
+                    totalSupply={totalSupply}
+                    getDatas={getDatas} />
+                )
+              case 3:
+                return (
+                  <SoldOut
+                    totalSupply={totalSupply} />
+                )
+              case 4:
+                return (
+                  <Reveal />
+                )
+              default:
+                return (
+                  <Flex>Connect your wallet </Flex>
+                )
             }
           })()
         ) : (
