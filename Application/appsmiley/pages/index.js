@@ -4,6 +4,14 @@ import Layout from "../components/Layout/Layout";
 import useEthersProvider from "../hooks/useEthersProvider";
 import Contract from "../artifacts/contracts/SmileyERC721A.sol/SmileyERC721A.json";
 import { ethers } from "ethers"
+// components
+import Before from "../components/Before/Before"
+import WhitelistSale from "../components/WhitelistSale/WhitelistSale"
+import PublicSale from "../components/PublicSale/PublicSale"
+import SoldOut from "../components/SoldOut/SoldOut"
+import Reveal from "../components/Reveal/Reveal"
+
+
 
 export default function Home() {
 
@@ -75,11 +83,21 @@ export default function Home() {
 
   return (
     <Layout>
-      <Flex align="center" justtify="center">
+      <Flex align="center" justify="center">
         {isLoading ? (
           <Spinner />
         ) : account ? (
-          <Flex>OK</Flex>
+          (() => {
+            console.log(sellingStep)
+            switch (sellingStep) {
+              case null:
+                return <Spinner />
+              case 0:
+                return (
+                  <Before />
+                )
+            }
+          })()
         ) : (
           <Text fontSize={30}>
             Please connect your wallet
