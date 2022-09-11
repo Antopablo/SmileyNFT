@@ -29,8 +29,8 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     uint256 private constant MAX_PUBLIC = 22;
     uint256 private constant MAX_SUPPLY_MINUS_GIFT = MAX_SUPPLY - MAX_GIFT;
 
-    uint256 public wlSalePrice = 0.01 ether;
-    uint256 public publicSalePrice = 0.03 ether;
+    uint256 public wlSalePrice = 0.001 ether;
+    uint256 public publicSalePrice = 0.003 ether;
 
     uint256 public saleStartTime = 1661983201;
 
