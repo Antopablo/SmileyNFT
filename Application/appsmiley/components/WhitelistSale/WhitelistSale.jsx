@@ -131,7 +131,7 @@ const WhitelistSale = (props) => {
                                     Whitelist sale is finished
                                 </Text>
                             ) : (
-                                <Text>
+                                <Flex>
                                     {mintIsLoading ? (
                                         <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
                                             <Spinner /> Processing mint...
@@ -145,7 +145,7 @@ const WhitelistSale = (props) => {
                                                     </Text>
                                                 </Flex>
                                             ) : (
-                                                <Flex p="2rem" algin="center" direction={["column", "column", "row", "row"]}>
+                                                <Flex p="2rem" align="center" direction={["column", "column", "row", "row"]}>
                                                     <Flex width={["100%", "100%", "50%", "50%"]} align="center" direction="column">
                                                         <Text fontWeight="bold" fontSize={["2rem", "2rem", "3rem", "4rem"]}>
                                                             Whitelist Sale
@@ -169,7 +169,7 @@ const WhitelistSale = (props) => {
                                             )}
                                         </Flex>
                                     )}
-                                </Text>
+                                </Flex>
                             )}
                         </Flex>
                     )}

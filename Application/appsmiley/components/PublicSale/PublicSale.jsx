@@ -14,7 +14,7 @@ const PublicSale = (props) => {
     const [hours, setHours] = useState(null);
     const [days, setDays] = useState(null);
 
-    const saleStartTime = 1664099642 + 24 * 3600; //24h après la whitelist
+    const saleStartTime = 1664015235 + 24 * 3600; //24h après la whitelist
     const endSaleTime = saleStartTime + 12 * 3600;
 
     const toast = useToast();
@@ -25,30 +25,21 @@ const PublicSale = (props) => {
         getCount()
     }, [])
 
-    const mint = async () => {
+    const mint = async (quantity) => {
         const signer = provider.getSigner();
         const contract = new ethers.Contract(contractAddress, Contract.abi, signer);
 
-        let tab = [];
-        tokens.map((token) => {
-            tab.push(token.address);
-        });
-        let leaves = tab.map((address) => keccak256(address));
-        let tree = new MerkleTree(leaves, keccak256, { sort: true })
-        let leaf = keccak256(account);
-        let proof = tree.getHexProof(leaf);
-
         let overrides = {
-            value: props.BNWlSalePrice
+            value: props.BNPublicSalePrice.mul(quantity)
         }
 
         try {
-            let transaction = await contract.whitelistMint(account, 1, proof, overrides);
+            let transaction = await contract.publicMint(account, quantity, overrides);
             setMintIsLoading(true);
             await transaction.wait();
             setMintIsLoading(false);
             toast({
-                description: "Congratulations ! You have minted one NFT ! ",
+                description: "Congratulations ! You have minted " + { quantity } + "NFT ! ",
                 status: "success",
                 duration: 5000,
                 isClosable: true
@@ -100,7 +91,7 @@ const PublicSale = (props) => {
                 <Flex>
                     {days >= 0 ? (
                         <Flex direction="column" align="center">
-                            <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>Whitelist Sale Start  in </Text>
+                            <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>Public Sale Start  in </Text>
                             <Flex align="center" justify="center" p="2rem">
                                 <Flex direction="column" justify="center" align="center" p={["1rem", "1rem", "2rem", "2rem"]}>
                                     <Text fontWeight="bold" fontSize={["2rem", "2rem", "5rem", "5rem"]}>{days}</Text>
@@ -122,51 +113,47 @@ const PublicSale = (props) => {
                         </Flex>
                     ) : (
                         <Flex>
-                            {timestamp > endSaleTime ? (
-                                <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
-                                    Whitelist sale is finished
-                                </Text>
-                            ) : (
-                                <Text>
-                                    {mintIsLoading ? (
-                                        <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
-                                            <Spinner /> Processing mint...
-                                        </Text>
-                                    ) : (
-                                        <Flex>
-                                            {props.totalSupply >= 3 ? (
-                                                <Flex>
-                                                    <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
-                                                        Whitelist sale is SOLD OUT
+                            <Flex>
+                                {mintIsLoading ? (
+                                    <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
+                                        <Spinner /> Processing mint...
+                                    </Text>
+                                ) : (
+                                    <Flex>
+                                        {props.totalSupply >= 22 ? (
+                                            <Flex>
+                                                <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
+                                                    Public sale is SOLD OUT
+                                                </Text>
+                                            </Flex>
+                                        ) : (
+                                            <Flex p="2rem" align="center" direction={["column", "column", "row", "row"]}>
+                                                <Flex width={["100%", "100%", "50%", "50%"]} align="center" direction="column">
+                                                    <Text fontWeight="bold" fontSize={["2rem", "2rem", "3rem", "4rem"]}>
+                                                        Public Sale
                                                     </Text>
-                                                </Flex>
-                                            ) : (
-                                                <Flex p="2rem" algin="center" direction={["column", "column", "row", "row"]}>
-                                                    <Flex width={["100%", "100%", "50%", "50%"]} align="center" direction="column">
-                                                        <Text fontWeight="bold" fontSize={["2rem", "2rem", "3rem", "4rem"]}>
-                                                            Whitelist Sale
-                                                        </Text>
-                                                        <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
-                                                            <chakra.span fontWeight="bold">NFTs sold </chakra.span>
-                                                            <chakra.span fontWeight="bold" color='orange'>{props.totalSupply} / 3</chakra.span>
-                                                        </Text>
-                                                        <Text fontSize="1.5rem">
-                                                            <chakra.span fontWeight="bold">Price </chakra.span>
-                                                            <chakra.span fontWeight="bold" color="orange">{props.wlSalePrice} Eth</chakra.span>
-                                                        </Text>
-                                                        <Flex mt="2rem">
-                                                            <Button colorScheme="orange" onClick={mint}>Buy 1 NFT</Button>
-                                                        </Flex>
-                                                    </Flex>
-                                                    <Flex width={["100%", "100%", "50%", "50%"]} justify="center" align="center" p={["2rem", "2rem", "0", "0"]}>
-                                                        <Image src="/mintImage.png" width="60%"></Image>
+                                                    <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
+                                                        <chakra.span fontWeight="bold">NFTs sold </chakra.span>
+                                                        <chakra.span fontWeight="bold" color='orange'>{props.totalSupply} / 22</chakra.span>
+                                                    </Text>
+                                                    <Text fontSize="1.5rem">
+                                                        <chakra.span fontWeight="bold">Price </chakra.span>
+                                                        <chakra.span fontWeight="bold" color="orange">{props.publicSalePrice} Eth</chakra.span>
+                                                    </Text>
+                                                    <Flex mt="2rem">
+                                                        <Button colorScheme="orange" onClick={() => mint(1)} ml="1rem" mr="1rem">Buy 1 NFT</Button>
+                                                        <Button colorScheme="orange" onClick={() => mint(2)} ml="1rem" mr="1rem">Buy 2 NFT</Button>
+                                                        <Button colorScheme="orange" onClick={() => mint(3)} ml="1rem" mr="1rem">Buy 3 NFT</Button>
                                                     </Flex>
                                                 </Flex>
-                                            )}
-                                        </Flex>
-                                    )}
-                                </Text>
-                            )}
+                                                <Flex width={["100%", "100%", "50%", "50%"]} justify="center" align="center" p={["2rem", "2rem", "0", "0"]}>
+                                                    <Image src="/mintImage.png" width="60%"></Image>
+                                                </Flex>
+                                            </Flex>
+                                        )}
+                                    </Flex>
+                                )}
+                            </Flex>
                         </Flex>
                     )}
                 </Flex>
