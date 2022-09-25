@@ -32,7 +32,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     uint256 public wlSalePrice = 0.001 ether;
     uint256 public publicSalePrice = 0.003 ether;
 
-    uint256 public saleStartTime = 1661983201;
+    uint256 public saleStartTime = 1664099683;
 
     bytes32 public merkleRoot;
 
