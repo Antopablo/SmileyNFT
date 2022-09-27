@@ -14,7 +14,7 @@ const PublicSale = (props) => {
     const [hours, setHours] = useState(null);
     const [days, setDays] = useState(null);
 
-    const saleStartTime = 1664015235 + 24 * 3600; //24h après la whitelist
+    const saleStartTime = 1665352800 + 86400 * 15; // 15 jours après le début des ventes (1 jour après la fin de la whitelist)
 
     const toast = useToast();
 

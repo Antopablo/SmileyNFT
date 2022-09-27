@@ -32,7 +32,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     uint256 public wlSalePrice = 0.001 ether;
     uint256 public publicSalePrice = 0.003 ether;
 
-    uint256 public saleStartTime = 1664099683;
+    uint256 public saleStartTime = 1665352800; //10 oct 2022 00:00:00
 
     bytes32 public merkleRoot;
 
@@ -49,7 +49,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     uint256 private teamLength;
 
     address[] private _team = [
-        0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266,
+        0x6455489e7a8aFf1565b32cB339A87baFBAf9141A,
         0x70997970C51812dc3A010C7d01b50e0d17dc79C8
     ];
 
@@ -87,7 +87,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     ) external payable callerIsUser {
         require(!isPaused, "Contract is paused");
         require(currentTime() >= saleStartTime, "Sale has not started yet");
-        require(currentTime() < saleStartTime + 12 hours, "Sale is finished");
+        require(currentTime() < saleStartTime + 2 weeks, "Sale is finished");
 
         uint256 price = wlSalePrice;
         require(price != 0, "Price is 0");
@@ -125,11 +125,11 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     {
         require(!isPaused, "Contract is paused");
         require(
-            currentTime() > saleStartTime + 24 hours,
+            currentTime() > saleStartTime + 2 weeks + 1 days,
             "Public sales has not started yet"
         );
         require(
-            currentTime() < saleStartTime + 48 hours,
+            currentTime() < saleStartTime + 5 weeks,
             "Public sales is finish"
         );
 

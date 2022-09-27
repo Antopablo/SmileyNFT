@@ -38,7 +38,7 @@ describe("Tests Smiley ERC721A", function () {
     })
 
     it("Sould set the set start time", async function () {
-        let saleStartTime = 1662211353;
+        let saleStartTime = 1665352800;
         await this.deployedContract.setSaleStartTime(saleStartTime);
         expect(await this.deployedContract.saleStartTime()).to.equal(saleStartTime);
     })
