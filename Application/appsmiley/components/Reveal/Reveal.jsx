@@ -10,7 +10,7 @@ const Reveal = (props) => {
     const [hours, setHours] = useState(null);
     const [days, setDays] = useState(null);
 
-    const revealTime = 1664661599;
+    const revealTime = 1665352800 + 86400 * 15; // 5 semaines après le début des ventes
 
 
     useEffect(() => {

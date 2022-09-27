@@ -18,8 +18,8 @@ const WhitelistSale = (props) => {
     const [days, setDays] = useState(null);
     const [timestamp, setTimestamp] = useState(Math.floor(Date.now() / 1000));
 
-    const saleStartTime = 1664099642;
-    const endSaleTime = saleStartTime + 12 * 3600;
+    const saleStartTime = 1665352800;
+    const endSaleTime = saleStartTime + 86400 * 14; //+15jours
 
     const toast = useToast();
 
