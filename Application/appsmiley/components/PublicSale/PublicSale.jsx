@@ -14,11 +14,11 @@ const PublicSale = (props) => {
     const [hours, setHours] = useState(null);
     const [days, setDays] = useState(null);
 
-    const saleStartTime = 1665352800 + 86400 * 15; // 15 jours après le début des ventes (1 jour après la fin de la whitelist)
+    const saleStartTime = 1664748000 + 86400 * 7; // 7 jours après le début des ventes
 
     const toast = useToast();
 
-    const contractAddress = "0x368a2fb35199058D019938C81363F31BD9b4984E";
+    const contractAddress = "0x8AFbaCE59C471BCFC4B1f9af4e4A757761b5C01B";
 
     useEffect(() => {
         getCount()
@@ -119,7 +119,7 @@ const PublicSale = (props) => {
                                     </Text>
                                 ) : (
                                     <Flex>
-                                        {props.totalSupply >= 22 ? (
+                                        {props.totalSupply >= 26 ? (
                                             <Flex>
                                                 <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
                                                     Public sale is SOLD OUT
@@ -142,7 +142,6 @@ const PublicSale = (props) => {
                                                     <Flex mt="2rem">
                                                         <Button colorScheme="orange" onClick={() => mint(1)} ml="1rem" mr="1rem">Buy 1 NFT</Button>
                                                         <Button colorScheme="orange" onClick={() => mint(2)} ml="1rem" mr="1rem">Buy 2 NFT</Button>
-                                                        <Button colorScheme="orange" onClick={() => mint(3)} ml="1rem" mr="1rem">Buy 3 NFT</Button>
                                                     </Flex>
                                                 </Flex>
                                                 <Flex width={["100%", "100%", "50%", "50%"]} justify="center" align="center" p={["2rem", "2rem", "0", "0"]}>

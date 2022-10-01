@@ -9,7 +9,7 @@ const SoldOut = (props) => {
             </Text>
             <Text fontSize={"1.5rem"}>
                 <chakra.span fontWeight="bold">NFTs sold
-                    <chakra.span color="orange"> {props.totalSupply}</chakra.span> / 22
+                    <chakra.span color="orange"> {props.totalSupply}</chakra.span> / 30
                 </chakra.span>
             </Text>
         </Flex>
