@@ -36,7 +36,7 @@ export default function Home() {
   const [totalSupply, setTotalSupply] = useState(null);
 
   const toast = useToast();
-  const ContractAddress = "0x368a2fb35199058D019938C81363F31BD9b4984E";
+  const ContractAddress = "0x8AFbaCE59C471BCFC4B1f9af4e4A757761b5C01B";
 
   useEffect(() => {
     if (account) {

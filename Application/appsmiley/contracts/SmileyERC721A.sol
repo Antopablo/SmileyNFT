@@ -24,15 +24,13 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     Step public sellingStep;
 
     uint256 private constant MAX_SUPPLY = 30;
-    uint256 private constant MAX_GIFT = 3;
-    uint256 private constant MAX_WHITELIST = 5;
-    uint256 private constant MAX_PUBLIC = 22;
-    uint256 private constant MAX_SUPPLY_MINUS_GIFT = MAX_SUPPLY - MAX_GIFT;
+    uint256 private constant MAX_WHITELIST = 4;
+    uint256 private constant MAX_PUBLIC = 26;
 
     uint256 public wlSalePrice = 0.001 ether;
     uint256 public publicSalePrice = 0.003 ether;
 
-    uint256 public saleStartTime = 1665352800; //10 oct 2022 00:00:00
+    uint256 public saleStartTime = 1664748000; //3 oct 2022 00:00:00
 
     bytes32 public merkleRoot;
 
@@ -42,7 +40,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     mapping(address => uint256) amountNFTperWalletPublicSale;
 
     uint256 private constant MAX_PER_ADRESS_DURING_WHITELIST_MINT = 1;
-    uint256 private constant MAX_PER_ADRESS_DURING_PUBLIC_MINT = 3;
+    uint256 private constant MAX_PER_ADRESS_DURING_PUBLIC_MINT = 2;
 
     bool public isPaused;
 
@@ -50,10 +48,12 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
 
     address[] private _team = [
         0x6455489e7a8aFf1565b32cB339A87baFBAf9141A,
-        0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+        0x42621bfa6b87FdA430daACd4d8c7ba707e161C5d,
+        0x536B42ece647D7c39C9b9Fd59b12cf92Eca50C92,
+        0x4E6300cd5B7382e0E3282Cb6D37A54c9c74a4DE6
     ];
 
-    uint256[] private _teamShares = [700, 300];
+    uint256[] private _teamShares = [700, 100, 100, 100];
 
     constructor(bytes32 _merkleRoot, string memory _baseURI)
         ERC721A("Smiley", "SMY")
@@ -87,7 +87,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     ) external payable callerIsUser {
         require(!isPaused, "Contract is paused");
         require(currentTime() >= saleStartTime, "Sale has not started yet");
-        require(currentTime() < saleStartTime + 2 weeks, "Sale is finished");
+        require(currentTime() < saleStartTime + 1 weeks, "Sale is finished");
 
         uint256 price = wlSalePrice;
         require(price != 0, "Price is 0");
@@ -125,11 +125,11 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
     {
         require(!isPaused, "Contract is paused");
         require(
-            currentTime() > saleStartTime + 2 weeks + 1 days,
+            currentTime() > saleStartTime + 1 weeks,
             "Public sales has not started yet"
         );
         require(
-            currentTime() < saleStartTime + 5 weeks,
+            currentTime() < saleStartTime + 6 weeks,
             "Public sales is finish"
         );
 
@@ -139,11 +139,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
         require(
             amountNFTperWalletPublicSale[msg.sender] + _quantity <=
                 MAX_PER_ADRESS_DURING_PUBLIC_MINT,
-            "You can only get 3 NFTs on the whitelist sale"
-        );
-        require(
-            totalSupply() + _quantity <= MAX_SUPPLY_MINUS_GIFT,
-            "Max supply exceeded"
+            "You can only get 2 NFTs on the whitelist sale"
         );
         require(msg.value >= price * _quantity, "Not enought funds");
         amountNFTperWalletPublicSale[msg.sender] += _quantity;
@@ -158,7 +154,6 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
      *
      */
     function gift(address _to, uint256 _quantity) external onlyOwner {
-        require(sellingStep > Step.PublicSale, "Gift is after the public sale");
         require(totalSupply() + _quantity <= MAX_SUPPLY, "Reach max supply");
         _safeMint(_to, _quantity);
     }

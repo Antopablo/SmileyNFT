@@ -18,12 +18,12 @@ const WhitelistSale = (props) => {
     const [days, setDays] = useState(null);
     const [timestamp, setTimestamp] = useState(Math.floor(Date.now() / 1000));
 
-    const saleStartTime = 1665352800;
-    const endSaleTime = saleStartTime + 86400 * 14; //+15jours
+    const saleStartTime = 1664748000;
+    const endSaleTime = saleStartTime + 86400 * 7; //+7jours
 
     const toast = useToast();
 
-    const contractAddress = "0x368a2fb35199058D019938C81363F31BD9b4984E";
+    const contractAddress = "0x8AFbaCE59C471BCFC4B1f9af4e4A757761b5C01B";
 
     useEffect(() => {
         getCount()
@@ -138,7 +138,7 @@ const WhitelistSale = (props) => {
                                         </Text>
                                     ) : (
                                         <Flex>
-                                            {props.totalSupply >= 3 ? (
+                                            {props.totalSupply >= 4 ? (
                                                 <Flex>
                                                     <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
                                                         Whitelist sale is SOLD OUT
