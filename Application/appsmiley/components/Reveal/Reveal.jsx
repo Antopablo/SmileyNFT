@@ -10,8 +10,7 @@ const Reveal = (props) => {
     const [hours, setHours] = useState(null);
     const [days, setDays] = useState(null);
 
-    const revealTime = 1664748000 + 86400 * 42; // 6 semaines après le début des ventes
-
+    const revealTime = 1664748000 + 86400 * 14; //14j après le début 
 
     useEffect(() => {
         getCount()

@@ -23,7 +23,7 @@ const WhitelistSale = (props) => {
 
     const toast = useToast();
 
-    const contractAddress = "0xd297C0B51aa1c0e497706b39dd2e491a1a2c9d4a";
+    const contractAddress = "0xbaAb47d233978fFaa2f917696f0cE88f40d48DD2";
 
     useEffect(() => {
         getCount()

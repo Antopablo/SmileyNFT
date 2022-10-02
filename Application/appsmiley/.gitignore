@@ -42,8 +42,7 @@ coverage.json
 typechain
 typechain-types
 
-.secrets.json
-
+/secrets.json
 
 node_modules
 .env
