@@ -129,7 +129,7 @@ contract SmileyERC721A is Ownable, ERC721A, ERC721AQueryable, PaymentSplitter {
             "Public sales has not started yet"
         );
         require(
-            currentTime() < saleStartTime + 6 weeks,
+            currentTime() < saleStartTime + 2 weeks,
             "Public sales is finish"
         );
 
