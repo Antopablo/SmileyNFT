@@ -22,9 +22,9 @@ module.exports = {
   paths: {
     artifacts: './artifacts'
   },
-  defaultNetwork: "rinkeby",
+  defaultNetwork: "goerli",
   networks: {
-    rinkeby: {
+    goerli: {
       url: INFURA,
       accounts: [`0x${PRIVATE_KEY}`]
     }
