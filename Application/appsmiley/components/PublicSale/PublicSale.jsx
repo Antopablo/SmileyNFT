@@ -133,7 +133,7 @@ const PublicSale = (props) => {
                                                     </Text>
                                                     <Text fontSize={["1.5rem", "1.5rem", "2rem", "3rem"]}>
                                                         <chakra.span fontWeight="bold">NFTs sold </chakra.span>
-                                                        <chakra.span fontWeight="bold" color='orange'>{props.totalSupply} / 22</chakra.span>
+                                                        <chakra.span fontWeight="bold" color='orange'>{props.totalSupply} / 26</chakra.span>
                                                     </Text>
                                                     <Text fontSize="1.5rem">
                                                         <chakra.span fontWeight="bold">Price </chakra.span>
